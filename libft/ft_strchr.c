@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 00:31:22 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/11/18 04:00:18 by mdalkili         ###   ########.fr       */
+/*   Created: 2024/11/15 01:48:24 by mdalkili          #+#    #+#             */
+/*   Updated: 2024/11/18 03:47:37 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../libft.h"
 
-#ifndef FT_PRINTF_H
-#define FT_PRINTF_H
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-int		ft_printf(char *format, ...);
-int		write_char(int chr);
-int		write_string(char *str);
-int		write_number(int n);
-int		write_unumber(unsigned int n);
-int		write_hex(unsigned int n,char format, int count);
-int		write_ptr(unsigned long long ptr, int count);
-
-#endif
+int	ft_strchr(char *str, char c)
+{
+	int	i;
+	
+	i = 0;
+	while(str && str[i] && str[i] != c)
+		i++;
+	return(str[i] - c);
+}

@@ -1,66 +1,46 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 00:32:19 by mdalkili          #+#    #+#             */
+/*   Updated: 2024/11/18 03:39:16 by mdalkili         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	write_char(int chr)
+#include "ft_printf.h"
+#include "libft.h"
+
+int	write_char(int chr)
 {
 	write(1,&chr,1);
+	return (1);
 }
 
-void	write_string(char *str)
+int	write_string(char *str)
 {
-	if(str == NULL)
-		write(1,"(null)",6);
+	int	i;
+
+	i = 0;
+	if(!str || !str[i])
+		i += write(1,"(null)",6);
 	else
 	{
-		while (str && *str)
-		{
-			write_char(*str++);
-		}
+		while (str && str[i])
+			write_char(str[i++]);
 	}
+	return (i);
 }
 
 
-void	write_number(int n)
+int	write_number(int n)
 {
-	int	count;
-	char *nmbtostr;
-	int ncpy;
-	if(n == -2147483648){
-		write_string("-2147483648");
-	}
-	else if (n < 0){
-		write_char('-');
-		write_number(n * -1);
-	}
-	else if (n >= 0 && n <= 9 ){
-		write_char(n + '0');
-	}
-	else{
-		count = 0;
-		ncpy = n;
-		while (n > 9)
-		{
-			n /= 10;
-			count++;
-		}
-		nmbtostr = (char *)malloc(sizeof(char) * count + 1);
-		nmbtostr[count] = '\0';
-		while (ncpy > 9)
-		{
-			count--;
-			nmbtostr[count] = ncpy % 10 + '0';
-			ncpy /= 10;
-			
-		}
-		write_char(ncpy % 10 + '0');
-		write_string(nmbtostr);
-		free(nmbtostr);
-	}
+	return (write_string(ft_itoa(n)));
 }
 
-void	write_unumber(unsigned int n)
+int	write_unumber(unsigned int n)
 {
 	int				count;
 	unsigned int	ncpy;
@@ -82,87 +62,91 @@ void	write_unumber(unsigned int n)
 		ncpy /= 10;
 		
 	}
-	write_char(ncpy % 10 + '0');
-	write_string(nmbtostr);
+	count = write_char(ncpy % 10 + '0') + write_string(nmbtostr);
 	free(nmbtostr);
+	return count;
 }
 
-void	write_hex(unsigned int n,char format)
+int	write_hex(unsigned int n,char format, int count)
 {
 	char *hex = "0123456789ABCDEF";
 	char chr;
 	if(n >= 16)
 	{
-		write_hex(n / 16,format);
+		count += write_hex(n / 16,format,count);
 	}
 	if (n % 16 > 9 && n % 16 < 17)
 	{
 		if (format == 'x')
 		{
 			chr = hex[n % 16] + 32;
-			write(1 ,&chr,1);
+			count += write(1 ,&chr,1);
 		}
 		else
-			write(1 ,&hex[n % 16],1);
+			count += write(1 ,&hex[n % 16],1);
 	}
 	else
-		write(1 ,&hex[n % 16],1);
-	
+		count += write(1 ,&hex[n % 16],1);
+	return (count);
 }
-void	write_ptr(unsigned long long ptr)
+int	write_ptr(unsigned long long ptr,int count)
 {
 	if(!ptr)
-		write(1, "(nil)", 5);
+		count += write(1, "(nil)", 5);
 	else{
 		char *hex = "0123456789abcdef";
 	
 		if(ptr > 16)
-			write_ptr(ptr / 16);
+			count += write_ptr(ptr / 16,count);
 		else
-			write(1,"0x",2);
-		write(1,&hex[ptr % 16],1);
+			count += write(1,"0x",2);
+		count += write(1,&hex[ptr % 16],1);
 	}
+	return(count);
+}
+int	printf_formats(char format,va_list *list)
+{
+	int written_character;
+	
+	written_character = 0;
+	if (format == 's')
+		written_character += write_string(va_arg(*list,char *));
+	else if(format == 'd' || format == 'i')
+		written_character += write_number(va_arg(*list,int));
+	else if(format == 'u')
+		written_character += write_unumber(va_arg(*list,unsigned int));
+	else if(format == 'c')
+		written_character += write_char(va_arg(*list,int));
+	else if(format == 'x' || format == 'X')
+		written_character += write_hex(va_arg(*list,unsigned int),format,0);
+	else if(format == 'p')
+		written_character += write_ptr(va_arg(*list,unsigned long long),0);
+	return(written_character);
 }
 
-void	ft_printf(char *format,...)
+int	ft_printf(char *format,...)
 {
+	int length;
 	va_list list;
 	va_start(list,format);
+	char *str;
+	
+	str = ft_strdup("sdiucxXp");
+	length = 0;
 	while (format && *format)
 	{
 		if(*format == '%')
 		{
-			format++;
-			if (*format == 's')
-			{
-				write_string(va_arg(list,char *));
-			}
-			else if(*format == 'd' || *format == 'i')
-			{
-				write_number(va_arg(list,int));
-			}
-			else if(*format == 'u')
-			{
-				write_unumber(va_arg(list,unsigned int));
-			}
-			else if(*format == 'c')
-			{
-				write_char(va_arg(list,int));
-			}
-			else if(*format == 'x' || *format == 'X')
-			{
-				write_hex(va_arg(list,unsigned int),*format);
-			}
-			else if(*format == 'p')
-			{
-				write_ptr(va_arg(list,unsigned long long));
-			}
+			++format;
+			if(!ft_strchr(str,*format))
+				length += printf_formats(*format, &list);
 			else
-				write(1,format,1);
+				length += write(1,format,1);
 		}
 		else
-			write(1,format,1);
+			length += write(1,format,1);
 		format++;
 	}
-	
+	return (length);
 }
+
