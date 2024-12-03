@@ -24,8 +24,8 @@ int	write_string(char *str)
 	int	i;
 
 	i = 0;
-	if(!str || !str[i])
-		i += write(1,"(null)",6);
+	if(!str)
+		i += write(1, "(null)", 6);
 	else
 	{
 		while (str && str[i])
@@ -67,7 +67,7 @@ int	write_unumber(unsigned int n)
 	return count;
 }
 
-int	write_hex(unsigned int n,char format, int count)
+int	write_hex(unsigned int n, char format, int count)
 {
 	char *hex = "0123456789ABCDEF";
 	char chr;
@@ -80,73 +80,73 @@ int	write_hex(unsigned int n,char format, int count)
 		if (format == 'x')
 		{
 			chr = hex[n % 16] + 32;
-			count += write(1 ,&chr,1);
+			count += write(1, &chr, 1);
 		}
 		else
-			count += write(1 ,&hex[n % 16],1);
+			count += write(1, &hex[n % 16], 1);
 	}
 	else
-		count += write(1 ,&hex[n % 16],1);
+		count += write(1, &hex[n % 16], 1);
 	return (count);
 }
-int	write_ptr(unsigned long long ptr,int count)
+
+int	write_ptr(unsigned long long ptr, int count)
 {
-	if(!ptr)
+	if (!ptr)
 		count += write(1, "(nil)", 5);
-	else{
-		char *hex = "0123456789abcdef";
-	
-		if(ptr > 16)
-			count += write_ptr(ptr / 16,count);
+	else
+	{
+		if (ptr > 16)
+			count += write_ptr(ptr / 16, count);
 		else
-			count += write(1,"0x",2);
-		count += write(1,&hex[ptr % 16],1);
+			count += write(1, "0x", 2);
+		count += write(1, &"0123456789abcdef"[ptr % 16], 1);//Warrrninggg
 	}
-	return(count);
-}
-int	printf_formats(char format,va_list *list)
-{
-	int written_character;
-	
-	written_character = 0;
-	if (format == 's')
-		written_character += write_string(va_arg(*list,char *));
-	else if(format == 'd' || format == 'i')
-		written_character += write_number(va_arg(*list,int));
-	else if(format == 'u')
-		written_character += write_unumber(va_arg(*list,unsigned int));
-	else if(format == 'c')
-		written_character += write_char(va_arg(*list,int));
-	else if(format == 'x' || format == 'X')
-		written_character += write_hex(va_arg(*list,unsigned int),format,0);
-	else if(format == 'p')
-		written_character += write_ptr(va_arg(*list,unsigned long long),0);
-	return(written_character);
+	return (count);
 }
 
-int	ft_printf(char *format,...)
+int	printf_formats(char format, va_list *list)
 {
-	int length;
-	va_list list;
-	va_start(list,format);
-	char *str;
-	
+	int	written_character;
+
+	written_character = 0;
+	if (format == 's')
+		written_character += write_string(va_arg(*list, char *));
+	else if (format == 'd' || format == 'i')
+		written_character += write_number(va_arg(*list, int));
+	else if (format == 'u')
+		written_character += write_unumber(va_arg(*list, unsigned int));
+	else if (format == 'c')
+		written_character += write_char(va_arg(*list, int));
+	else if (format == 'x' || format == 'X')
+		written_character += write_hex(va_arg(*list, unsigned int), format, 0);
+	else if (format == 'p')
+		written_character += write_ptr(va_arg(*list, unsigned long long), 0);
+	return (written_character);
+}
+
+int	ft_printf(char *format, ...)
+{
+	int		length;
+	va_list	list;
+	char	*str;
+
+	va_start(list, format);
 	str = ft_strdup("sdiucxXp");
 	length = 0;
 	while (format && *format)
 	{
-		if(*format == '%')
+		if (*format == '%')
 		{
 			++format;
-			if(!ft_strchr(str,*format))
+			if (!ft_strchr(str, *format))
 				length += printf_formats(*format, &list);
 			else
-				length += write(1,format,1);
+				length += write(1, format, 1);
 		}
 		else
-			length += write(1,format,1);
+			length += write(1, format, 1);
 		format++;
 	}
 	return (length);
 }
-
