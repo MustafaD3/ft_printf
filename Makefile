@@ -1,6 +1,6 @@
 NAME = libftprintf.a
 LIBFT_DIR = ./libft
-SOURCES = ft_printf.c $(LIBFT_DIR)/ft_strdup.c $(LIBFT_DIR)/ft_strlen.c $(LIBFT_DIR)/ft_itoa.c $(LIBFT_DIR)/ft_strchr.c 
+SOURCES = ft_printf.c ft_printf_utils.c $(LIBFT_DIR)/ft_strdup.c $(LIBFT_DIR)/ft_strlen.c $(LIBFT_DIR)/ft_itoa.c $(LIBFT_DIR)/ft_strchr.c 
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc

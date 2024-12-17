@@ -6,7 +6,7 @@
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 01:48:21 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/11/18 03:47:35 by mdalkili         ###   ########.fr       */
+/*   Updated: 2024/12/04 02:24:49 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static size_t	get_digits(int n)
 	return (i);
 }
 
-char			*ft_itoa(int n)
+char			*ft_itoa(long n)
 {
 	char		*str_num;
 	size_t		digits;

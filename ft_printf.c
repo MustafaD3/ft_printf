@@ -6,84 +6,28 @@
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 00:32:19 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/11/18 03:39:16 by mdalkili         ###   ########.fr       */
+/*   Updated: 2024/12/17 03:34:26 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "libft.h"
 
-int	write_char(int chr)
-{
-	write(1,&chr,1);
-	return (1);
-}
-
-int	write_string(char *str)
-{
-	int	i;
-
-	i = 0;
-	if(!str)
-		i += write(1, "(null)", 6);
-	else
-	{
-		while (str && str[i])
-			write_char(str[i++]);
-	}
-	return (i);
-}
-
-
-int	write_number(int n)
-{
-	return (write_string(ft_itoa(n)));
-}
-
-int	write_unumber(unsigned int n)
-{
-	int				count;
-	unsigned int	ncpy;
-	char 			*nmbtostr;
-	
-	count = 0;
-	ncpy = n;
-	while (n > 9)
-	{
-		n /= 10;
-		count++;
-	}
-	nmbtostr = (char *)malloc(sizeof(char) * count + 1);
-	nmbtostr[count] = '\0';
-	while (ncpy > 9)
-	{
-		count--;
-		nmbtostr[count] = ncpy % 10 + '0';
-		ncpy /= 10;
-		
-	}
-	count = write_char(ncpy % 10 + '0') + write_string(nmbtostr);
-	free(nmbtostr);
-	return count;
-}
-
 int	write_hex(unsigned int n, char format, int count)
 {
-	char *hex = "0123456789ABCDEF";
-	char chr;
-	if(n >= 16)
-	{
-		count += write_hex(n / 16,format,count);
-	}
-	if (n % 16 > 9 && n % 16 < 17)
+	char	*hex;
+	char	chr;
+
+	hex = "0123456789ABCDEF";
+	if (n >= 16)
+		count += write_hex(n / 16, format, count);
+	if (n % 16 > 9)
 	{
 		if (format == 'x')
-		{
 			chr = hex[n % 16] + 32;
-			count += write(1, &chr, 1);
-		}
 		else
-			count += write(1, &hex[n % 16], 1);
+			chr = hex[n % 16];
+		count += write(1, &chr, 1);
 	}
 	else
 		count += write(1, &hex[n % 16], 1);
@@ -100,7 +44,7 @@ int	write_ptr(unsigned long long ptr, int count)
 			count += write_ptr(ptr / 16, count);
 		else
 			count += write(1, "0x", 2);
-		count += write(1, &"0123456789abcdef"[ptr % 16], 1);//Warrrninggg
+		count += write(1, &"0123456789abcdef"[ptr % 16], 1);
 	}
 	return (count);
 }
@@ -115,7 +59,7 @@ int	printf_formats(char format, va_list *list)
 	else if (format == 'd' || format == 'i')
 		written_character += write_number(va_arg(*list, int));
 	else if (format == 'u')
-		written_character += write_unumber(va_arg(*list, unsigned int));
+		written_character += write_number(va_arg(*list, unsigned int));
 	else if (format == 'c')
 		written_character += write_char(va_arg(*list, int));
 	else if (format == 'x' || format == 'X')
@@ -125,28 +69,32 @@ int	printf_formats(char format, va_list *list)
 	return (written_character);
 }
 
-int	ft_printf(char *format, ...)
+int ft_printf(const char *str, ...)
 {
 	int		length;
 	va_list	list;
-	char	*str;
+	char	*formats;
+	int		i;
 
-	va_start(list, format);
-	str = ft_strdup("sdiucxXp");
+	va_start(list, str);
+	formats = ft_strdup("sdiucxXp");
 	length = 0;
-	while (format && *format)
+	i = 0;
+	while (str && str[i])
 	{
-		if (*format == '%')
+		if (str[i] == '%')
 		{
-			++format;
-			if (!ft_strchr(str, *format))
-				length += printf_formats(*format, &list);
+			i++;
+			while ((str[i] >= 9 && str[i] <=13) || str[i] == 32)
+				i++;
+			if (!ft_strchr(formats, str[i]))
+				length += printf_formats(str[i], &list);
 			else
-				length += write(1, format, 1);
+				length += write(1, &str[i], 1);
 		}
 		else
-			length += write(1, format, 1);
-		format++;
+			length += write(1, &str[i], 1);
+		i++;
 	}
 	return (length);
 }

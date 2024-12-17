@@ -1,29 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 00:31:22 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/12/17 03:16:27 by mdalkili         ###   ########.fr       */
+/*   Created: 2024/12/04 02:15:52 by mdalkili          #+#    #+#             */
+/*   Updated: 2024/12/04 02:18:16 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_printf.h"
+#include "libft.h"
 
-#ifndef FT_PRINTF_H
-#define FT_PRINTF_H
+int	write_char(int chr)
+{
+	return (write(1, &chr, 1));
+}
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
+int	write_string(char *str)
+{
+	int	i;
 
-int		ft_printf(const char *, ...);
-int		write_char(int chr);
-int		write_string(char *str);
-int		write_number(int n);
-int		write_unumber(unsigned int n);
-int		write_hex(unsigned int n,char format, int count);
-int		write_ptr(unsigned long long ptr, int count);
+	i = 0;
+	if (!str)
+		i += write(1, "(null)", 6);
+	else
+	{
+		while (str && str[i])
+			write_char(str[i++]);
+	}
+	return (i);
+}
 
-#endif
+int	write_number(int n)
+{
+	return (write_string(ft_itoa(n)));
+}

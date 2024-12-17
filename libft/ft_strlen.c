@@ -6,7 +6,7 @@
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 03:47:51 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/11/18 03:49:10 by mdalkili         ###   ########.fr       */
+/*   Updated: 2024/12/04 02:20:28 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 size_t	ft_strlen(char *str)
 {
 	int	i;
-	
+
 	i = 0;
 	while (str && str[i])
 		i++;
