@@ -1,44 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/04 02:15:52 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/12/04 02:18:16 by mdalkili         ###   ########.fr       */
+/*   Created: 2024/11/15 01:48:24 by mdalkili          #+#    #+#             */
+/*   Updated: 2024/11/18 03:47:37 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-#include "libft.h"
+#include "../libft.h"
 
-int	write_char(int chr)
-{
-	return (write(1, &chr, 1));
-}
-
-int	write_string(char *str)
+int	ft_strchr(char *str, char c)
 {
 	int	i;
 
 	i = 0;
-	if (!str)
-		i += write(1, "(null)", 6);
-	else
+	while (str && str[i])
 	{
-		while (str && str[i])
-			write_char(str[i++]);
-	}
-	return (i);
-}
-
-int	write_number(int n)
-{
-	return (write_string(ft_itoa(n)));
-}
-
-int	write_unumber(unsigned int n)
-{
-	return (write_string(ft_uitoa(n)));
+		if (str[i] == c)
+			return (1);
+		i++;
+	}	
+	return (0);
 }

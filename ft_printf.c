@@ -59,7 +59,7 @@ int	printf_formats(char format, va_list *list)
 	else if (format == 'd' || format == 'i')
 		written_character += write_number(va_arg(*list, int));
 	else if (format == 'u')
-		written_character += write_number(va_arg(*list, unsigned int));
+		written_character += write_unumber(va_arg(*list, unsigned int));
 	else if (format == 'c')
 		written_character += write_char(va_arg(*list, int));
 	else if (format == 'x' || format == 'X')
@@ -69,25 +69,21 @@ int	printf_formats(char format, va_list *list)
 	return (written_character);
 }
 
-int ft_printf(const char *str, ...)
+int	ft_printf(const char *str, ...)
 {
 	int		length;
 	va_list	list;
-	char	*formats;
 	int		i;
 
-	va_start(list, str);
-	formats = ft_strdup("sdiucxXp");
-	length = 0;
 	i = 0;
+	va_start(list, str);
+	length = 0;
 	while (str && str[i])
 	{
 		if (str[i] == '%')
 		{
 			i++;
-			while ((str[i] >= 9 && str[i] <=13) || str[i] == 32)
-				i++;
-			if (!ft_strchr(formats, str[i]))
+			if (ft_strchr("sdiucxXp", str[i]))
 				length += printf_formats(str[i], &list);
 			else
 				length += write(1, &str[i], 1);
