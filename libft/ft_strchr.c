@@ -6,7 +6,7 @@
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 01:48:24 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/11/18 03:47:37 by mdalkili         ###   ########.fr       */
+/*   Updated: 2024/12/25 09:45:39 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,13 @@
 int	ft_strchr(char *str, char c)
 {
 	int	i;
-	
+
 	i = 0;
-	while(str && str[i] && str[i] != c)
+	while (str && str[i])
+	{
+		if (str[i] == c)
+			return (1);
 		i++;
-	return(str[i] - c);
+	}
+	return (0);
 }

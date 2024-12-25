@@ -6,7 +6,7 @@
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 00:32:19 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/12/17 03:34:26 by mdalkili         ###   ########.fr       */
+/*   Updated: 2024/12/25 10:51:32 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	write_ptr(unsigned long long ptr, int count)
 		count += write(1, "(nil)", 5);
 	else
 	{
-		if (ptr > 16)
+		if (ptr >= 16)
 			count += write_ptr(ptr / 16, count);
 		else
 			count += write(1, "0x", 2);
@@ -59,7 +59,7 @@ int	printf_formats(char format, va_list *list)
 	else if (format == 'd' || format == 'i')
 		written_character += write_number(va_arg(*list, int));
 	else if (format == 'u')
-		written_character += write_unumber(va_arg(*list, unsigned int));
+		written_character += write_number(va_arg(*list, unsigned int));
 	else if (format == 'c')
 		written_character += write_char(va_arg(*list, int));
 	else if (format == 'x' || format == 'X')

@@ -6,7 +6,7 @@
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 02:15:52 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/12/04 02:18:16 by mdalkili         ###   ########.fr       */
+/*   Updated: 2024/12/25 10:45:07 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,7 @@ int	write_string(char *str)
 	return (i);
 }
 
-int	write_number(int n)
+int	write_number(long long n)
 {
 	return (write_string(ft_itoa(n)));
-}
-
-int	write_unumber(unsigned int n)
-{
-	return (write_string(ft_uitoa(n)));
 }

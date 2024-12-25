@@ -6,36 +6,43 @@
 /*   By: mdalkili <mdalkilic344@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 01:48:21 by mdalkili          #+#    #+#             */
-/*   Updated: 2024/12/04 02:24:49 by mdalkili         ###   ########.fr       */
+/*   Updated: 2024/12/25 10:46:28 by mdalkili         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
-static size_t	get_digits(int n)
+static size_t	get_digits(long long n)
 {
 	size_t	i;
 
-	i = 1;
-	while (n /= 10)
+	i = 0;
+	if (n == 0)
+		return (1);
+	while (n)
+	{
+		n /= 10;
 		i++;
+	}
 	return (i);
 }
 
-char			*ft_itoa(long n)
+char	*ft_itoa(long long n)
 {
 	char		*str_num;
 	size_t		digits;
 	long int	num;
 
 	num = n;
-	digits = get_digits(n);
+	digits = 0;
 	if (n < 0)
 	{
 		num *= -1;
 		digits++;
 	}
-	if (!(str_num = (char *)malloc(sizeof(char) * (digits + 1))))
+	digits += get_digits(n);
+	str_num = (char *)malloc(sizeof(char) * (digits + 1));
+	if (!str_num)
 		return (NULL);
 	*(str_num + digits) = 0;
 	while (digits--)
